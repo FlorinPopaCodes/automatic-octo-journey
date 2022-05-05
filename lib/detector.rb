@@ -1,47 +1,33 @@
-class Detector
-  attr_accessor :radar_sample, :invaders
+require './lib/matrix_similarity'
 
-  def initialize(radar_sample, invaders: [])
-    self.radar_sample = radar_sample
-    self.invaders = invaders
+class Detector
+  attr_accessor :radar_sample, :invaders, :specificity, :possible_invaders
+
+  def initialize(radar_sample, invaders: [], specificity: 0.8)
+    self.radar_sample = radar_sample.new
+    self.invaders = invaders.map(&:new)
+    self.specificity = specificity
+    self.possible_invaders = []
   end
 
   def run
     radar_matrix = radar_sample.matrix
 
-    radar_matrix_height = radar_matrix.size
-    radar_matrix_weight = radar_matrix.first.size
-
-    possible_invaders = []
-
-    radar_matrix_height.times do |x|
-      radar_matrix_weight.times do |y|
+    radar_matrix.height.times do |x|
+      radar_matrix.width.times do |y|
 
         invaders.each do |invader|
-          hits = 0
-          checks = 0
+          submatrix = Matrix.submatrix_from_matrix(radar_matrix, x, y, invader.width, invader.height)
+          similarity = ::MatrixSimilarity.new(invader.matrix, submatrix).compare
 
-          invader.shape.each_with_index do |shape_line, shape_line_index|
-            shape_line.each_with_index do |shape_char, shape_char_index|
-              next unless radar_matrix[x + shape_line_index] && radar_matrix[x + shape_line_index][y + shape_char_index]
-              checks += 1
-
-              if shape_char == radar_matrix[x + shape_line_index][y + shape_char_index]
-                hits += 1
-              end
-            end
+          if similarity > 0.8
+            possible_invaders << [x, y, similarity, invader.name]
           end
-
-          # if hits is at least half of checks, then we have a match
-          if hits == checks
-            possible_invaders << [x, y, hits.to_f / checks, invader.name]
-          end
-        end
-
+        endq
       end
     end
 
-    possible_invaders
+    possible_invaders.sort_by { |x| -x[2] }
   end
 
   def count

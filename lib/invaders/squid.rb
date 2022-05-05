@@ -2,23 +2,17 @@ require './lib/invaders/base_invader'
 
 module Invaders
   class Squid < BaseInvader
-    SCAN = <<~EOL
-    ---oo---
-    --oooo--
-    -oooooo-
-    oo-oo-oo
-    oooooooo
-    --o--o--
-    -o-oo-o-
-    o-o--o-o
-    EOL
-
     def self.shape
-      SCAN
-        .lines(chomp: true)
-        .map do |line|
-          line.split('')
-        end
+      <<~EOL
+      ---oo---
+      --oooo--
+      -oooooo-
+      oo-oo-oo
+      oooooooo
+      --o--o--
+      -o-oo-o-
+      o-o--o-o
+      EOL
     end
   end
 end
