@@ -12,43 +12,35 @@ class Detector
   end
 
   def run
-    max_invader_height = invaders.map(&:height).max
-
     radar_matrix = radar_sample.matrix
 
-    radar_matrix.height.times do |x|
-      radar_matrix.width.times do |y|
-        invaders.each do |invader|
-          if x == 0
-            1.upto(invader.height / 2) do |i|
-              bottom_part_of_invader = invader.matrix.bottom_part(skip_lines: i)
+    invaders.each do |invader|
+      radar_matrix.height.times do |x|
+        versions_to_check = []
 
-              submatrix = Matrix.submatrix_from_matrix(radar_matrix, x, y, bottom_part_of_invader.width, bottom_part_of_invader.height)
-              similarity = bottom_part_of_invader.compare(submatrix)
+        if x == 0
+          0.upto(invader.height / 2) do |i|
+            versions_to_check << invader.matrix.bottom_part(skip_lines: i)
+          end
+        elsif x == radar_matrix.height - invader.height / 2 - 1
+          1.upto(invader.height / 2) do |i|
+            versions_to_check << invader.matrix.top_part(skip_lines: i)
+          end
+        else
+          versions_to_check << invader.matrix
+        end
 
-              if similarity > specificity
-                possible_invaders << [x-i, y, similarity, invader]
-                break
-              end
-            end
-          elsif x == radar_matrix.height - max_invader_height / 2 - 1
-            1.upto(invader.height / 2) do |i|
-              top_part_of_invader = invader.matrix.top_part(skip_lines: i)
+        radar_matrix.width.times do |y|
+          versions_to_check.each do |invader_version|
+            similarity = Matrix
+                .submatrix_from_matrix(radar_matrix, x, y, invader_version.width, invader_version.height)
+                .compare(invader_version)
 
-              submatrix = Matrix.submatrix_from_matrix(radar_matrix, x, y, top_part_of_invader.width, top_part_of_invader.height)
-              similarity = submatrix.compare(top_part_of_invader)
-
-              if similarity > specificity
-                possible_invaders << [x, y, similarity, invader]
-                break
-              end
+            if similarity > specificity
+              possible_invaders << [x, y]
+              break
             end
           end
-
-          submatrix = Matrix.submatrix_from_matrix(radar_matrix, x, y, invader.width, invader.height)
-          similarity = invader.matrix.compare(submatrix)
-
-          possible_invaders << [x, y, similarity, invader] if similarity > specificity
         end
       end
     end

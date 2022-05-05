@@ -24,7 +24,4 @@ RSpec.describe Detector do
   it "finds all the invaders including those at the edges" do
     expect(detector.run.count).to be >= 9
   end
-
-  # TODO
-  # * test for invaders at the edges
 end
