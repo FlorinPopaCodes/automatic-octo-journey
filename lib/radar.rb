@@ -1,4 +1,4 @@
-class RadarSample
+class Radar
   TRAINING_DATA = <<~EOL
   ----o--oo----o--ooo--ooo--o------o---oo-o----oo---o--o---------o----o------o-------------o--o--o--o-
   --o-o-----oooooooo-oooooo---o---o----o------ooo-o---o--o----o------o--o---ooo-----o--oo-o------o----
@@ -51,4 +51,12 @@ class RadarSample
   o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o------------oooo-o------oo--
   -----o----------ooooooooo--------------oo--------------oo-----o-----o-o--o------o----------o----o---
   EOL
+
+  def self.matrix
+    TRAINING_DATA
+      .lines(chomp: true)
+      .map do |line|
+        line.split('')
+      end
+  end
 end

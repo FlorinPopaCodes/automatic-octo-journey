@@ -12,5 +12,13 @@ module Invaders
     o-o-----o-o
     ---oo-oo---
     EOL
+
+    def self.shape
+      SCAN
+        .lines(chomp: true)
+        .map do |line|
+          line.split('')
+        end
+    end
   end
 end
