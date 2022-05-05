@@ -57,11 +57,17 @@ class Radar
     EOL
   end
 
-  attr_reader :matrix, :width, :height
+  attr_reader :matrix
 
   def initialize
     @matrix = ::Matrix.from_string(self.class.training_data)
-    @height = @matrix.height
-    @width = @matrix.width
+  end
+
+  def height
+    @matrix.height
+  end
+
+  def width
+    @matrix.width
   end
 end

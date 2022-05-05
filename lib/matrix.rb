@@ -1,3 +1,5 @@
+require './lib/matrix_similarity'
+
 class Matrix
   attr_reader :height, :width, :matrix
 
@@ -25,12 +27,30 @@ class Matrix
     @matrix == other.matrix
   end
 
+  def height
+    @matrix.size
+  end
+
+  def width
+    @matrix.first.size
+  end
+
+  def bottom_part(skip_lines: 0)
+    Matrix.submatrix_from_matrix(self, skip_lines, 0, width, height - skip_lines)
+  end
+
+  def top_part(skip_lines: 0)
+    Matrix.submatrix_from_matrix(self, 0, 0, width, height - skip_lines)
+  end
+
+  def compare(other)
+    MatrixSimilarity.new(self, other).compare
+  end
+
   private
 
   def initialize(matrix = nil)
     @matrix = matrix || []
-    @height = @matrix.size
-    @width = @matrix.first.size
   end
 end
 

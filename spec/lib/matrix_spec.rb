@@ -46,4 +46,22 @@ RSpec.describe Matrix do
       expect(matrix).to eq(matrix)
     end
   end
+
+  describe '#compare' do
+    it "returns the similarity between the two matrices" do
+      expect(matrix.compare(matrix)).to eq(1)
+    end
+  end
+
+  describe '#bottom_part' do
+    it "returns the bottom part of the matrix" do
+      expect(matrix.bottom_part(skip_lines: 2)).to eq(Matrix.from_string("789\n147"))
+    end
+  end
+
+  describe '#top_part' do
+    it "returns the top part of the matrix" do
+      expect(matrix.top_part(skip_lines: 2)).to eq(Matrix.from_string("123\n456"))
+    end
+  end
 end
