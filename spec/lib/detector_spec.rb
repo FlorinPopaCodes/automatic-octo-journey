@@ -18,17 +18,13 @@ RSpec.describe Detector do
   end
 
   it "finds all the obvious invaders" do
-    expect(detector.run.count).to be >= 6
+    expect(detector.run.count).to be >= 7
   end
 
   it "finds all the invaders including those at the edges" do
-    p detector.run
-    expect(detector.run.count).to be >= 8
+    expect(detector.run.count).to be >= 9
   end
 
   # TODO
   # * test for invaders at the edges
-  # * test for invaders that are overlapping
-
-
 end

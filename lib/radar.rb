@@ -2,6 +2,7 @@ require './lib/matrix'
 
 class Radar
   def self.training_data
+    # Somewhere in this data there was a big 'O' and I replaced it with a small 'o'.
     <<~EOL
     ----o--oo----o--ooo--ooo--o------o---oo-o----oo---o--o---------o----o------o-------------o--o--o--o-
     --o-o-----oooooooo-oooooo---o---o----o------ooo-o---o--o----o------o--o---ooo-----o--oo-o------o----
