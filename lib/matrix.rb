@@ -47,6 +47,12 @@ class Matrix
     MatrixSimilarity.new(self, other).compare
   end
 
+  def compare_with_submatrix(other, x, y)
+    self.compare(
+      self.class.submatrix_from_matrix(other, x, y, width, height)
+    )
+  end
+
   private
 
   def initialize(matrix = nil)

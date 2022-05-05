@@ -24,4 +24,18 @@ RSpec.describe Detector do
   it "finds all the invaders including those at the edges" do
     expect(detector.run.count).to be == 9
   end
+
+  it "finds all the invaders including those at the edges" do
+    expect(detector.run).to eq([
+      [0, 18],
+      [0, 42],
+      [15, 35],
+      [28, 16],
+      [41, 82],
+      [45, 17],
+      [1, 74],
+      [12, 85],
+      [13, 60]
+    ])
+  end
 end
