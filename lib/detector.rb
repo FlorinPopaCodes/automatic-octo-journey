@@ -10,36 +10,7 @@ class Detector
   end
 
   def run
-    radar_matrix = radar_sample.matrix
-
-    invaders.each do |invader|
-      radar_sample.height.times do |x|
-        radar_sample.width.times do |y|
-          # Edge cases.
-          if radar_matrix.top_part?(x)
-
-            invader.top_varieties.each do |invader_variety|
-              if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
-                possible_invaders << [x, y]
-                break
-              end
-            end
-          elsif radar_matrix.bottom_part?(x, adjustment: invader.height / 2)
-
-            invader.bottom_varieties.each do |invader_variety|
-              if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
-                possible_invaders << [x, y]
-                break
-              end
-            end
-          end
-
-          possible_invaders << [x, y] if invader.matrix.compare_with_submatrix(radar_matrix, x, y) > specificity
-        end
-      end
-    end
-
-    possible_invaders
+    check
   end
 
   def count
@@ -49,4 +20,57 @@ class Detector
   private
 
   attr_writer :radar_sample, :invaders, :specificity, :possible_invaders
+
+  def check
+    check_invaders do |invader|
+      check_radar do |x, y|
+        add_possible_invaders_from_top_part(invader, x, y)
+        add_possible_invaders_from_bottom_part(invader, x, y)
+
+        add_possible_invaders(invader, x, y)
+      end
+    end
+
+    possible_invaders
+  end
+
+  def check_invaders
+    invaders.each do |invader|
+      yield invader
+    end
+  end
+
+  # TODO: improve to skip over already detected invaders.
+  def check_radar
+    radar_sample.matrix.height.times do |x|
+      radar_sample.matrix.width.times do |y|
+        yield x, y
+      end
+    end
+  end
+
+  def add_possible_invaders_from_top_part(invader, x, y)
+    return unless radar_sample.matrix.top_part?(x)
+
+    invader.top_varieties.each do |invader_variety|
+      if invader_variety.compare_with_submatrix(radar_sample.matrix, x, y) > specificity
+        possible_invaders << [x, y]
+        break
+      end
+    end
+  end
+
+  def add_possible_invaders_from_bottom_part(invader, x, y)
+    return unless radar_sample.matrix.bottom_part?(x, adjustment: invader.height / 2)
+    invader.bottom_varieties.each do |invader_variety|
+      if invader_variety.compare_with_submatrix(radar_sample.matrix, x, y) > specificity
+        possible_invaders << [x, y]
+        break
+      end
+    end
+  end
+
+  def add_possible_invaders(invader, x, y)
+    possible_invaders << [x, y] if invader.matrix.compare_with_submatrix(radar_sample.matrix, x, y) > specificity
+  end
 end
