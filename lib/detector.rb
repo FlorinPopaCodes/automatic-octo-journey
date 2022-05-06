@@ -15,20 +15,17 @@ class Detector
     invaders.each do |invader|
       radar_matrix.height.times do |x|
         radar_matrix.width.times do |y|
-          if x == 0
-            1.upto(invader.height / 2) do |i|
-              bottom_part_of_invader = invader.matrix.bottom_part(skip_lines: i)
-
-              if bottom_part_of_invader.compare_with_submatrix(radar_matrix, x, y) > specificity
+          # Edge cases.
+          if radar_matrix.top_part?(x)
+            invader.top_varieties.each do |invader_variety|
+              if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
                 possible_invaders << [x, y]
                 break
               end
             end
-          elsif x == radar_matrix.height - invader.height / 2 - 1
-            1.upto(invader.height / 2) do |i|
-              top_part_of_invader = invader.matrix.top_part(skip_lines: i)
-
-              if top_part_of_invader.compare_with_submatrix(radar_matrix, x, y) > specificity
+          elsif radar_matrix.bottom_part?(x, adjustment: invader.height / 2)
+            invader.bottom_varieties.each do |invader_variety|
+              if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
                 possible_invaders << [x, y]
                 break
               end

@@ -53,6 +53,14 @@ class Matrix
     )
   end
 
+  def top_part?(position)
+    position == 0
+  end
+
+  def bottom_part?(position, adjustment: 0)
+    position == height - adjustment - 1
+  end
+
   private
 
   def initialize(matrix = nil)
