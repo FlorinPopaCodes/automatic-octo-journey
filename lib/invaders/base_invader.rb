@@ -1,8 +1,11 @@
 require './lib/matrix'
+require './lib/invaders/variety_generators'
 
 # Base class for all invaders
 module Invaders
   class BaseInvader
+    include Invaders::VarietyGenerators
+
     attr_reader :matrix
 
     def initialize
@@ -27,18 +30,6 @@ module Invaders
 
     def width
       @matrix.width
-    end
-
-    def top_varieties
-      @top_varieties ||= (1..(height / 2)).map do |i|
-        @matrix.bottom_part(skip_lines: i)
-      end
-    end
-
-    def bottom_varieties
-      @bottom_varieties ||= (1..(height / 2)).map do |i|
-        @matrix.top_part(skip_lines: i)
-      end
     end
   end
 end

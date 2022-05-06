@@ -13,10 +13,11 @@ class Detector
     radar_matrix = radar_sample.matrix
 
     invaders.each do |invader|
-      radar_matrix.height.times do |x|
-        radar_matrix.width.times do |y|
+      radar_sample.height.times do |x|
+        radar_sample.width.times do |y|
           # Edge cases.
           if radar_matrix.top_part?(x)
+
             invader.top_varieties.each do |invader_variety|
               if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
                 possible_invaders << [x, y]
@@ -24,6 +25,7 @@ class Detector
               end
             end
           elsif radar_matrix.bottom_part?(x, adjustment: invader.height / 2)
+
             invader.bottom_varieties.each do |invader_variety|
               if invader_variety.compare_with_submatrix(radar_matrix, x, y) > specificity
                 possible_invaders << [x, y]

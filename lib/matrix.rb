@@ -1,6 +1,9 @@
 require './lib/matrix_similarity'
+require './lib/submatrix_operations'
 
 class Matrix
+  include SubmatrixOperations
+
   attr_reader :height, :width, :matrix
 
   def self.from_string(string_matrix)
@@ -11,12 +14,6 @@ class Matrix
       end
 
     new(parsed_string)
-  end
-
-  def self.submatrix_from_matrix(matrix, x, y, width, height)
-    new(matrix.matrix[x..x + height - 1].map do |line|
-      line[y..y + width - 1]
-    end)
   end
 
   def [](x)
@@ -35,22 +32,8 @@ class Matrix
     @matrix.first.size
   end
 
-  def bottom_part(skip_lines: 0)
-    Matrix.submatrix_from_matrix(self, skip_lines, 0, width, height - skip_lines)
-  end
-
-  def top_part(skip_lines: 0)
-    Matrix.submatrix_from_matrix(self, 0, 0, width, height - skip_lines)
-  end
-
   def compare(other)
     MatrixSimilarity.new(self, other).compare
-  end
-
-  def compare_with_submatrix(other, x, y)
-    self.compare(
-      self.class.submatrix_from_matrix(other, x, y, width, height)
-    )
   end
 
   def top_part?(position)
